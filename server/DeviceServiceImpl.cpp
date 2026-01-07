@@ -19,7 +19,7 @@ grpc::Status DeviceServiceImpl::RegisterDevice(grpc::ServerContext* context,
         return grpc::Status::OK;
     }
 
-    if (!isValidDeviceState(state)){
+    if (!isValidClientSettableState(state)){
         response->set_success(false);
         response->set_message("Invalid device state");
         return grpc::Status::OK;
@@ -52,7 +52,7 @@ grpc::Status DeviceServiceImpl::SetDeviceStatus(grpc::ServerContext* context,
         return grpc::Status::OK;
     }
 
-    if (!isValidDeviceState(state)){
+    if (!isValidClientSettableState(state)){
         response->set_success(false);
         response->set_message("Invalid device state");
         return grpc::Status::OK;

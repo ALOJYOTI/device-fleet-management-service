@@ -9,6 +9,10 @@ find_package(Protobuf REQUIRED)
 
 add_subdirectory(../proto proto_build)
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(DEBUG_BUILD)
+endif()
+
 add_executable(device_server
     main.cpp
     DeviceManager.cpp

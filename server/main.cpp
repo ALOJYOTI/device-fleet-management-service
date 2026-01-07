@@ -7,6 +7,7 @@
 #include "device.grpc.pb.h"
 #include "DeviceManager.h"
 #include "DeviceServiceImpl.h"
+#include "Logger.h"
 
 int main()
 {
@@ -21,7 +22,7 @@ int main()
 
     std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
 
-    std::cout << "Device Fleet Server starting on "<< serverAddress << std::endl;
+    LOG_INFO("Device Fleet Server starting on "<< serverAddress);
     server->Wait();
     return 0;
 }

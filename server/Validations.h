@@ -7,7 +7,7 @@ inline bool isValidDeviceId(const std::string& id){
     return !id.empty();
 }
 
-inline bool isValidDeviceState(devicefleet::DeviceState state){
+inline bool isValidClientSettableState(devicefleet::DeviceState state){
     switch (state) {
         case devicefleet::IDLE:
         case devicefleet::BUSY:
