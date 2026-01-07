@@ -6,7 +6,7 @@ DeviceServiceImpl::DeviceServiceImpl(DeviceManager& manager)
 
 // ---------------- RegisterDevice ----------------//
 
-grpc::Status RegisterDevice(grpc::ServerContext* context,
+grpc::Status DeviceServiceImpl::RegisterDevice(grpc::ServerContext* context,
     const devicefleet::RegisterDeviceRequest* request,
     devicefleet::RegisterDeviceResponse* response)
 {
@@ -39,7 +39,7 @@ grpc::Status RegisterDevice(grpc::ServerContext* context,
 
 // ---------------- SetDeviceStatus ----------------//
 
-grpc::Status SetDeviceStatus(grpc::ServerContext* context,
+grpc::Status DeviceServiceImpl::SetDeviceStatus(grpc::ServerContext* context,
     const devicefleet::SetDeviceStatusRequest* request,
     devicefleet::SetDeviceStatusResponse* response)
 {
@@ -73,11 +73,11 @@ grpc::Status SetDeviceStatus(grpc::ServerContext* context,
 
 // ---------------- GetDeviceInfo ----------------//
 
-grpc::Status GetDeviceInfo(grpc::ServerContext* context,
+grpc::Status DeviceServiceImpl::GetDeviceInfo(grpc::ServerContext* context,
     const devicefleet::GetDeviceInfoRequest* request,
     devicefleet::GetDeviceInfoResponse* response)
 {
-    if (!isValidDeviceId(id)){
+    if (!isValidDeviceId(request->device_id())){
         response->set_found(false);
         return grpc::Status::OK;
     }

@@ -12,6 +12,7 @@ add_subdirectory(../proto proto_build)
 add_executable(device_server
     main.cpp
     DeviceManager.cpp
+    DeviceServiceImpl.cpp
 )
 
 target_link_libraries(device_server
