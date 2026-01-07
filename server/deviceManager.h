@@ -2,6 +2,7 @@
 #include <shared_mutex>
 #include <unordered_map>
 #include <string>
+#include "device.pb.h"
 
 class DeviceManager
 {
