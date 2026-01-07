@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package devicefleet;
+
+ENUM DeviceState{
+    DEVICE_UNKNOWN = 0;
+    IDLE = 1;
+    BUSY = 2;
+    OFFLINE = 3;
+    MAINTENANCE = 4;
+}
+
+message Device {
+  string device_id = 1;
+  DeviceState state = 2;
+}
+
+message RegisterDeviceRequest {
+  string device_id = 1;
+  DeviceState initial_state = 2;
+}
+
+message RegisterDeviceResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message SetDeviceStatusRequest {
+  string device_id = 1;
+  DeviceState state = 2;
+}
+
+message SetDeviceStatusResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetDeviceInfoRequest {
+  string device_id = 1;
+}
+
+message GetDeviceInfoResponse {
+  Device device = 1;
+  bool found = 2;
+}
+
+service DeviceFleetService {
+  rpc RegisterDevice(RegisterDeviceRequest) returns (RegisterDeviceResponse);
+  rpc SetDeviceStatus(SetDeviceStatusRequest) returns (SetDeviceStatusResponse);
+  rpc GetDeviceInfo(GetDeviceInfoRequest) returns (GetDeviceInfoResponse);
+}
