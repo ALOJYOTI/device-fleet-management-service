@@ -77,7 +77,9 @@ message InitiateDeviceActionRequest {
 }
 
 message InitiateDeviceActionResponse {
-  string action_id = 1;
+  bool success = 1;
+  string message = 2;
+  string action_id = 3;
 }
 
 message GetDeviceActionStatusRequest {
