@@ -2,12 +2,38 @@ syntax = "proto3";
 
 package devicefleet;
 
-enum DeviceState{
+enum DeviceState {
     DEVICE_UNKNOWN = 0;
     IDLE = 1;
     BUSY = 2;
     OFFLINE = 3;
     MAINTENANCE = 4;
+    UPDATING = 5;
+    RECOVERING = 6;
+}
+
+enum ActionType {
+  ACTION_UNKNOWN = 0;
+  SOFTWARE_UPDATE = 1;
+}
+
+enum SoftwareVersion {
+  VERSION_UNKNOWN = 0;
+  V1_0 = 1;
+  V1_1 = 2;
+  V2_0 = 3;
+}
+
+enum ActionStatus {
+  ACTION_STATUS_UNKNOWN = 0;
+  PENDING = 1;
+  RUNNING = 2;
+  COMPLETED = 3;
+  FAILED = 4;
+}
+
+message ActionParams {
+  SoftwareVersion target_version = 1;
 }
 
 message Device {
@@ -44,8 +70,31 @@ message GetDeviceInfoResponse {
   bool found = 2;
 }
 
+message InitiateDeviceActionRequest {
+  string device_id = 1;
+  ActionType action_type = 2;
+  ActionParams params = 3;
+}
+
+message InitiateDeviceActionResponse {
+  string action_id = 1;
+}
+
+message GetDeviceActionStatusRequest {
+  string action_id = 1;
+}
+
+message GetDeviceActionStatusResponse {
+  ActionStatus status = 1;
+  bool found = 2;
+}
+
 service DeviceFleetService {
   rpc RegisterDevice(RegisterDeviceRequest) returns (RegisterDeviceResponse);
   rpc SetDeviceStatus(SetDeviceStatusRequest) returns (SetDeviceStatusResponse);
   rpc GetDeviceInfo(GetDeviceInfoRequest) returns (GetDeviceInfoResponse);
+  rpc InitiateDeviceAction(InitiateDeviceActionRequest)
+      returns (InitiateDeviceActionResponse);
+  rpc GetDeviceActionStatus(GetDeviceActionStatusRequest)
+      returns (GetDeviceActionStatusResponse);
 }
