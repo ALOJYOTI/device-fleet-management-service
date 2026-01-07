@@ -2,13 +2,13 @@ syntax = "proto3";
 
 package devicefleet;
 
-ENUM DeviceState{
+enum DeviceState{
     DEVICE_UNKNOWN = 0;
     IDLE = 1;
     BUSY = 2;
     OFFLINE = 3;
     MAINTENANCE = 4;
-}
+};
 
 message Device {
   string device_id = 1;
