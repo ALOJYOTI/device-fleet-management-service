@@ -7,10 +7,10 @@
 class DeviceManager
 {
 public:
-    bool RegisterDevice(const std::string& id, devicefleet::DeviceState state);
-    bool SetDeviceStatus(const std::string& id, devicefleet::DeviceState state);
-    bool GetDeviceInfo(const std::string& id, devicefleet::Device& device);
+    bool registerDevice(const std::string& deviceId, devicefleet::DeviceState deviceState);
+    bool setDeviceStatus(const std::string& deviceId, devicefleet::DeviceState deviceState);
+    bool getDeviceInfo(const std::string& deviceId, devicefleet::Device& device);
 private:
     std::unordered_map<std::string, devicefleet::Device> devices_;
-    mutable std::shared_mutex mutex;
+    mutable std::shared_mutex mutex_;
 };

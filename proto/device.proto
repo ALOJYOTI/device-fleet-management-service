@@ -8,11 +8,11 @@ enum DeviceState{
     BUSY = 2;
     OFFLINE = 3;
     MAINTENANCE = 4;
-};
+}
 
 message Device {
   string device_id = 1;
-  DeviceState state = 2;
+  DeviceState device_state = 2;
 }
 
 message RegisterDeviceRequest {

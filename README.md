@@ -4,7 +4,7 @@ This project is a prototype backend system that simulates the management of a fl
 It provides a gRPC based API to register devices, track their states, and trigger mock long-running operations such as software updates.
 
 Technologies Used
-C++11
+C++17
 gRPC / Protocol Buffers
 CMake
 Python 3
