@@ -241,19 +241,22 @@ The system consists of the following main components
 - Command line interface for interacting with the backend
 
 ## Architecture Overview
+
+```
 Python CLI → gRPC API → DeviceServiceImpl
-|
-|
-+--------------------+
-| Application Layer |
-+--------------------+
-↙ ↘
-+------------+ +-------------+
-| DeviceMgr | | ActionMgr |
-+------------+ +-------------+
-|
-↓
-Worker Pool (N threads)
+                                |
+                                |
+                        +--------------------+
+                        | Application Layer  |
+                        +--------------------+
+                                    ↙ ↘
+                        +------------+ +-------------+
+                        | DeviceMgr | | ActionMgr |
+                        +------------+ +-------------+
+                                                |
+                                                ↓
+                                    Worker Pool (N threads)
+```
 
 ## How the backend and CLI interact
 
