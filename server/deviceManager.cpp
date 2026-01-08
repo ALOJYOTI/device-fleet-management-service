@@ -45,6 +45,15 @@ bool DeviceManager::getDeviceInfo(const std::string& deviceId, devicefleet::Devi
     return true;
 }
 
+std::vector<devicefleet::Device> DeviceManager::listDevices() const {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
+    std::vector<devicefleet::Device> result;
+    for (const auto& [_, device] : devices_) {
+        result.push_back(device);
+    }
+    return result;
+}
+
 bool DeviceManager::deviceExists(const std::string& id) const {
     std::lock_guard<std::shared_mutex> lock(mutex_);
     return devices_.count(id) > 0;
@@ -54,14 +63,14 @@ bool DeviceManager::setInternalDeviceState(const std::string& id,
                     devicefleet::DeviceState state) {
 
     if (!isValidInternalState(state)) {
-        LOG_INFO("[DeviceManager] INVALID device state "<< state);
+        LOG_DEBUG("[DeviceManager] INVALID device state "<< state);
         return false;
     }
     
     std::lock_guard<std::shared_mutex> lock(mutex_);
     auto it = devices_.find(id);
     if (it == devices_.end()) {
-        LOG_INFO("[DeviceManager] Device does not exists "<< id);
+        LOG_DEBUG("[DeviceManager] Device does not exists "<< id);
         return false;
     }
 

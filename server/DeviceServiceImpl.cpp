@@ -91,6 +91,22 @@ grpc::Status DeviceServiceImpl::GetDeviceInfo(grpc::ServerContext* context,
     return grpc::Status::OK;
 }
 
+grpc::Status DeviceServiceImpl::ListDevices(
+    grpc::ServerContext*,
+    const devicefleet::ListDevicesRequest*,
+    devicefleet::ListDevicesResponse* response) {
+
+    auto devices = deviceManager_.listDevices();
+
+    for (const auto& d : devices) {
+        auto* dev = response->add_devices();
+        *dev = d;
+    }
+
+    return grpc::Status::OK;
+}
+
+
 
 grpc::Status DeviceServiceImpl::InitiateDeviceAction(grpc::ServerContext*,
                                       const devicefleet::InitiateDeviceActionRequest*  request,

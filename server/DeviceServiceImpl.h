@@ -25,13 +25,18 @@ public:
         devicefleet::GetDeviceInfoResponse* response
     ) override;
 
+    grpc::Status ListDevices(grpc::ServerContext*,
+        const devicefleet::ListDevicesRequest*,
+        devicefleet::ListDevicesResponse*) override;
+
+
     grpc::Status InitiateDeviceAction(grpc::ServerContext*,
-                                      const devicefleet::InitiateDeviceActionRequest*,
-                                      devicefleet::InitiateDeviceActionResponse*) override;
+        const devicefleet::InitiateDeviceActionRequest*,
+        devicefleet::InitiateDeviceActionResponse*) override;
 
     grpc::Status GetDeviceActionStatus(grpc::ServerContext*,
-                                       const devicefleet::GetDeviceActionStatusRequest*,
-                                       devicefleet::GetDeviceActionStatusResponse*) override;
+        const devicefleet::GetDeviceActionStatusRequest*,
+        devicefleet::GetDeviceActionStatusResponse*) override;
 
     
 

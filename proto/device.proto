@@ -10,6 +10,7 @@ enum DeviceState {
     MAINTENANCE = 4;
     UPDATING = 5;
     RECOVERING = 6;
+    ERROR = 7;
 }
 
 enum ActionType {
@@ -70,6 +71,12 @@ message GetDeviceInfoResponse {
   bool found = 2;
 }
 
+message ListDevicesRequest {}
+
+message ListDevicesResponse {
+  repeated Device devices = 1;
+}
+
 message InitiateDeviceActionRequest {
   string device_id = 1;
   ActionType action_type = 2;
@@ -95,6 +102,7 @@ service DeviceFleetService {
   rpc RegisterDevice(RegisterDeviceRequest) returns (RegisterDeviceResponse);
   rpc SetDeviceStatus(SetDeviceStatusRequest) returns (SetDeviceStatusResponse);
   rpc GetDeviceInfo(GetDeviceInfoRequest) returns (GetDeviceInfoResponse);
+  rpc ListDevices(ListDevicesRequest) returns (ListDevicesResponse);
   rpc InitiateDeviceAction(InitiateDeviceActionRequest)
       returns (InitiateDeviceActionResponse);
   rpc GetDeviceActionStatus(GetDeviceActionStatusRequest)

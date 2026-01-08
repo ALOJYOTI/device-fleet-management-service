@@ -10,6 +10,7 @@ public:
     bool registerDevice(const std::string& deviceId, devicefleet::DeviceState deviceState);
     bool setDeviceStatus(const std::string& deviceId, devicefleet::DeviceState deviceState);
     bool getDeviceInfo(const std::string& deviceId, devicefleet::Device& device) const;
+    std::vector<devicefleet::Device> listDevices() const;
     bool deviceExists(const std::string& id) const;
     bool setInternalDeviceState(const std::string& id,
                             devicefleet::DeviceState state);

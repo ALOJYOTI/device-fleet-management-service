@@ -24,6 +24,7 @@ inline bool isValidInternalState(devicefleet::DeviceState state) {
         case devicefleet::IDLE:
         case devicefleet::UPDATING:
         case devicefleet::RECOVERING:
+        case devicefleet::ERROR:
             return true;
         default:
             return false;

@@ -17,7 +17,9 @@ def register_device(args):
     )
 
     resp = stub.RegisterDevice(req)
-    print (resp.success, resp.message)
+    print(f"{'SUCCESS' if resp.success else 'FAILURE'}")
+    print(f"{resp.message}")
+
 
 def set_status(args):
     stub = get_stub()
@@ -26,7 +28,8 @@ def set_status(args):
         state=device_pb2.DeviceState.Value(args.state)
     )
     resp = stub.SetDeviceStatus(req)
-    print(resp.success, resp.message)
+    print(f"{'SUCCESS' if resp.success else 'FAILURE'}")
+    print(f"{resp.message}")
 
 def get_device_info(args):
     stub = get_stub()
@@ -48,7 +51,7 @@ def start_action(args):
 
     req = device_pb2.InitiateDeviceActionRequest(
         device_id=args.id,
-        action_type=device_pb2.ActionType.SOFTWARE_UPDATE,
+        action_type=args.type,
         params=params
     )
 
@@ -72,6 +75,14 @@ def get_action_status(args):
     status = device_pb2.ActionStatus.Name(resp.status)
     print(f"Action Status: {status}")
 
+def list_devices(args):
+    stub = get_stub()
+    resp = stub.ListDevices(device_pb2.ListDevicesRequest())
+
+    for d in resp.devices:
+        state = device_pb2.DeviceState.Name(d.device_state)
+        print(f"Device ID: {d.device_id}, State: {state}")
+
 def main():
     parser = argparse.ArgumentParser()
     sub = parser.add_subparsers()
@@ -94,6 +105,8 @@ def main():
 
     p4 = sub.add_parser("start-action")
     p4.add_argument("--id", required=True)
+    p4.add_argument("--type", required=True,
+                    choices=["SOFTWARE_UPDATE"])
     p4.add_argument("--version", required=True,
                     choices=["V1_0", "V1_1", "V2_0"])
     p4.set_defaults(func=start_action)
@@ -101,6 +114,9 @@ def main():
     p5 = sub.add_parser("get-action-status")
     p5.add_argument("--action-id", required=True)
     p5.set_defaults(func=get_action_status)
+
+    p6 = sub.add_parser("list-devices")
+    p6.set_defaults(func=list_devices)
 
     args = parser.parse_args()
     args.func(args)

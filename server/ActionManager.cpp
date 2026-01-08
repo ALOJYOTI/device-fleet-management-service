@@ -38,9 +38,23 @@ bool ActionManager::initiateDeviceAction(const std::string& deviceId,
     LOG_DEBUG("[ActionManager] Received initiateDeviceAction request for device: " << deviceId);
 
     if (!deviceManager_.deviceExists(deviceId)) {
-        outMessage = "Device : " + deviceId + " not registered";
+        outMessage = "Device : " + deviceId + " ,not registered";
         LOG_DEBUG("[ActionManager] initiateDeviceAction failed: device not registered");
         return false;
+    }
+
+    devicefleet::Device device;
+    if (!deviceManager_.getDeviceInfo(deviceId, device)) {
+        outMessage = "Device : " + deviceId + " ,state not available";
+        LOG_DEBUG("[ActionManager] initiateDeviceAction failed: device state not available");
+        return false;
+    }
+
+    if (device.device_state() != devicefleet::IDLE) {
+    outMessage = "Device not available for action, current device state: "+
+                    devicefleet::DeviceState_Name(device.device_state());
+    LOG_DEBUG("[ActionManager] initiateDeviceAction failed: device not available for action");
+    return false;
     }
 
     std::string newActionId;
@@ -140,29 +154,41 @@ void ActionManager::workerLoop(){
         }
 
         if (success) {
-            LOG_INFO("[ActionManager] Action completed: " << actionId);
+            LOG_INFO("[ActionManager] Action completed: action Id: " << actionId);
             if(!deviceManager_.setInternalDeviceState(action.device_id,
                                                   devicefleet::IDLE))
             {
                 LOG_INFO("[ActionManager] Internal error: failed to set state for device "
                 << action.device_id);
             }
-        } else {
-            LOG_INFO("[ActionManager] Action failed: " << actionId << ", recovering device");
+        } 
+        else {
+            LOG_INFO("[ActionManager] Action failed: action Id : " << actionId << ", entering ERROR state");
+            if(!deviceManager_.setInternalDeviceState(action.device_id, devicefleet::ERROR))
+            {
+                LOG_INFO("[ActionManager] CRITICAL: failed to set ERROR state for device "
+                << action.device_id)
+                continue;
+            }
 
             if(!deviceManager_.setInternalDeviceState(action.device_id,
                                                   devicefleet::RECOVERING))
             {
-                LOG_INFO("[ActionManager] Internal error: failed to set RECOVERING for device "
+                LOG_INFO("[ActionManager] CRITICAL: failed to RECOVER device "
                 << action.device_id);
+                continue;
             }
+            LOG_DEBUG("[ActionManager] Action failed: " << actionId << ", recovering device");
             std::this_thread::sleep_for(std::chrono::seconds(5));
             if(!deviceManager_.setInternalDeviceState(action.device_id,
                                                   devicefleet::IDLE))
             {
-                LOG_INFO("[ActionManager] Internal error: failed to reset state for device "
+                LOG_INFO("[ActionManager] CRITICAL: failed to restore IDLE for device: "
                 << action.device_id);
+                continue;
             }
+
+            LOG_INFO("[ActionManager] Recovery complete for device " << action.device_id);
         }
     }
 }
