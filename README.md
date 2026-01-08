@@ -358,7 +358,7 @@ IDLE → UPDATING → ERROR → RECOVERING → IDLE
 
 ## Project Structure
 
-proto/ → gRPC API definitions
+- proto/ → gRPC API definitions
 server/ → C++ backend
 client/ → Python CLI
 tests/ → Unit tests (CxxTest)
