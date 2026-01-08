@@ -3,11 +3,12 @@
 #include <grpcpp/grpcpp.h>
 #include "device.grpc.pb.h"
 #include "DeviceManager.h"
+#include "ActionManager.h"
 
 class DeviceServiceImpl final : public devicefleet::DeviceFleetService::Service
 {
 public:
-    explicit DeviceServiceImpl(DeviceManager& manager);
+    explicit DeviceServiceImpl(DeviceManager& dm, ActionManager& am);
 
     grpc::Status RegisterDevice(grpc::ServerContext* context,
         const devicefleet::RegisterDeviceRequest* request,
@@ -24,8 +25,17 @@ public:
         devicefleet::GetDeviceInfoResponse* response
     ) override;
 
+    grpc::Status InitiateDeviceAction(grpc::ServerContext*,
+                                      const devicefleet::InitiateDeviceActionRequest*,
+                                      devicefleet::InitiateDeviceActionResponse*) override;
+
+    grpc::Status GetDeviceActionStatus(grpc::ServerContext*,
+                                       const devicefleet::GetDeviceActionStatusRequest*,
+                                       devicefleet::GetDeviceActionStatusResponse*) override;
+
     
 
 private:
-    DeviceManager& manager_;
+    DeviceManager& deviceManager_;
+    ActionManager& actionManager_;
 };

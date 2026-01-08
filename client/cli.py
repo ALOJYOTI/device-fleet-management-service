@@ -39,6 +39,39 @@ def get_device_info(args):
     else:
         print("Device not found")
 
+def start_action(args):
+    stub = get_stub()
+
+    params = device_pb2.ActionParams(
+        target_version=device_pb2.SoftwareVersion.Value(args.version)
+    )
+
+    req = device_pb2.InitiateDeviceActionRequest(
+        device_id=args.id,
+        action_type=device_pb2.ActionType.SOFTWARE_UPDATE,
+        params=params
+    )
+
+    resp = stub.InitiateDeviceAction(req)
+
+    if resp.success:
+        print(f"Action initiated. Action ID: {resp.action_id}")
+    else:
+        print(f"{resp.message}")
+
+def get_action_status(args):
+    stub = get_stub()
+
+    req = device_pb2.GetDeviceActionStatusRequest(action_id=args.action_id)
+    resp = stub.GetDeviceActionStatus(req)
+
+    if not resp.found:
+        print("Action not found")
+        return
+
+    status = device_pb2.ActionStatus.Name(resp.status)
+    print(f"Action Status: {status}")
+
 def main():
     parser = argparse.ArgumentParser()
     sub = parser.add_subparsers()
@@ -58,6 +91,16 @@ def main():
     p3 = sub.add_parser("get-device-info")
     p3.add_argument("--id", required=True)
     p3.set_defaults(func=get_device_info)
+
+    p4 = sub.add_parser("start-action")
+    p4.add_argument("--id", required=True)
+    p4.add_argument("--version", required=True,
+                    choices=["V1_0", "V1_1", "V2_0"])
+    p4.set_defaults(func=start_action)
+
+    p5 = sub.add_parser("get-action-status")
+    p5.add_argument("--action-id", required=True)
+    p5.set_defaults(func=get_action_status)
 
     args = parser.parse_args()
     args.func(args)

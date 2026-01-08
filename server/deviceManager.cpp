@@ -1,4 +1,5 @@
 #include "DeviceManager.h"
+#include "Validations.h"
 #include "Logger.h"
 
 bool DeviceManager::registerDevice(const std::string& deviceId, devicefleet::DeviceState deviceState){
@@ -30,15 +31,40 @@ bool DeviceManager::setDeviceStatus(const std::string& deviceId, devicefleet::De
     return true;
 }
 
-bool DeviceManager::getDeviceInfo(const std::string& deviceId, devicefleet::Device& device) {
-    std::lock_guard<std::shared_mutex> lock(mutex_);
+bool DeviceManager::getDeviceInfo(const std::string& deviceId, devicefleet::Device& device) const {
+    std::shared_lock<std::shared_mutex> lock(mutex_);
     LOG_DEBUG("[DeviceManager] Get device info: " << deviceId);
 
-    if (!devices_.count(deviceId)) {
+    auto it = devices_.find(deviceId);
+    if (it == devices_.end()) {
         LOG_DEBUG("[DeviceManager] Device not found: " << deviceId);
         return false;
     }
-    device = devices_[deviceId];
+    device = it->second;
     LOG_DEBUG("[DeviceManager] Device returned: " << deviceId);
     return true;
+}
+
+bool DeviceManager::deviceExists(const std::string& id) const {
+    std::lock_guard<std::shared_mutex> lock(mutex_);
+    return devices_.count(id) > 0;
+}
+
+bool DeviceManager::setInternalDeviceState(const std::string& id,
+                    devicefleet::DeviceState state) {
+
+    if (!isValidInternalState(state)) {
+        LOG_INFO("[DeviceManager] INVALID device state "<< state);
+        return false;
+    }
+    
+    std::lock_guard<std::shared_mutex> lock(mutex_);
+    auto it = devices_.find(id);
+    if (it == devices_.end()) {
+        LOG_INFO("[DeviceManager] Device does not exists "<< id);
+        return false;
+    }
+
+    it->second.set_device_state(state);
+    return true;   
 }

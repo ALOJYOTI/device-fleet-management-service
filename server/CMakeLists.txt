@@ -17,6 +17,7 @@ add_executable(device_server
     main.cpp
     DeviceManager.cpp
     DeviceServiceImpl.cpp
+    ActionManager.cpp
 )
 
 target_link_libraries(device_server
