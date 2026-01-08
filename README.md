@@ -38,7 +38,7 @@ The project should run on any modern Linux distribution with equivalent tooling.
 ### Build C++ Backend
 
 ```bash
-sudo apt install build-essential cmake protobuf-compiler libgrpc++-dev cxxtest
+sudo apt install build-essential cmake protobuf-compiler libgrpc++-dev protobuf-compiler-grpc cxxtest
 
 # From project root
 cd server
