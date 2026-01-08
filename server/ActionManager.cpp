@@ -167,7 +167,7 @@ void ActionManager::workerLoop(){
             if(!deviceManager_.setInternalDeviceState(action.device_id, devicefleet::ERROR))
             {
                 LOG_INFO("[ActionManager] CRITICAL: failed to set ERROR state for device "
-                << action.device_id)
+                << action.device_id);
                 continue;
             }
 

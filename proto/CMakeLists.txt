@@ -14,15 +14,15 @@ add_custom_command(
         ${GENERATED_PROTO_DIR}/device.grpc.pb.h
     COMMAND protobuf::protoc
     ARGS
-        --grpc_out ${GENERATED_PROTO_DIR}
-        --cpp_out ${GENERATED_PROTO_DIR}
+        --grpc_out=${GENERATED_PROTO_DIR}
+        --cpp_out=${GENERATED_PROTO_DIR}
         -I ${CMAKE_CURRENT_SOURCE_DIR}
-        --plugin=protoc-gen-grpc=/usr/bin/grpc_cpp_plugin
+        --plugin=protoc-gen-grpc=$<TARGET_FILE:gRPC::grpc_cpp_plugin>
         ${PROTO_FILE}
     DEPENDS ${PROTO_FILE}
 )
 
-add_library(proto_files
+add_library(proto_files STATIC
     ${GENERATED_PROTO_DIR}/device.pb.cc
     ${GENERATED_PROTO_DIR}/device.grpc.pb.cc
 )

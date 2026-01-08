@@ -7,12 +7,14 @@
 class DeviceManager
 {
 public:
+    virtual ~DeviceManager() = default;
+
     bool registerDevice(const std::string& deviceId, devicefleet::DeviceState deviceState);
     bool setDeviceStatus(const std::string& deviceId, devicefleet::DeviceState deviceState);
-    bool getDeviceInfo(const std::string& deviceId, devicefleet::Device& device) const;
+    virtual bool getDeviceInfo(const std::string& deviceId, devicefleet::Device& device) const;
     std::vector<devicefleet::Device> listDevices() const;
-    bool deviceExists(const std::string& id) const;
-    bool setInternalDeviceState(const std::string& id,
+    virtual bool deviceExists(const std::string& id) const;
+    virtual bool setInternalDeviceState(const std::string& id,
                             devicefleet::DeviceState state);
 private:
     std::unordered_map<std::string, devicefleet::Device> devices_;

@@ -1,13 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
-project(device_fleet)
+project(device_server CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-find_package(gRPC CONFIG REQUIRED)
-find_package(Protobuf REQUIRED)
-
-add_subdirectory(../proto proto_build)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(DEBUG_BUILD)
@@ -20,8 +15,13 @@ add_executable(device_server
     ActionManager.cpp
 )
 
+target_include_directories(device_server PRIVATE
+    ${CMAKE_BINARY_DIR}/generated
+)
+
 target_link_libraries(device_server
     proto_files
     gRPC::grpc++
     protobuf::libprotobuf
+    pthread
 )
